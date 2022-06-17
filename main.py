@@ -10,7 +10,30 @@ bot.remove_command('help')
 
 @bot.event
 async def on_ready():
-    print('bot connected')
+    print(f'bot: {bot.user}\nid: {bot.user.id}\ntoken: {CFG["Bottoken"]}\nInvite code: z69c5CnxFT')
+
+
+@bot.event
+async def on_message_delete(message):
+    author = str(message.author)
+    msg = str(message.content)
+    delete_chan = str(message.channel)
+    logs = bot.get_channel(986654062760058920)
+    embed = discord.Embed(title="Deleted message!", description="Someone delete message", colour=discord.Colour.from_rgb(0, 125, 255))
+    embed.add_field(name='Author message:', value=f'***{author}***', inline=False)
+    embed.add_field(name='Where deleted:', value=f'***{delete_chan}***', inline=False)
+    embed.add_field(name='Deleted message:', value=f'***{msg}***', inline=False)
+    await logs.send(embed=embed)
+
+
+@bot.event
+async def on_message(message):
+    channel = bot.get_channel(986654062760058920)
+    if 'https:' in message.content and message.author.id != 985846247485214730:
+        await message.delete()
+        await channel.send(f"Member: {message.author.mention}. Send link! [{message.content}]")
+    else:
+        await bot.process_commands(message)
 
 
 @bot.event
@@ -20,18 +43,27 @@ async def on_member_join(member):
     await member.add_roles(role)
     await channel.send(f'Member joined: [ID: {member.id}, Mention: {member.mention}, Name: {member.name}]')
 
+
 @bot.event
 async def on_member_join(member):
     channel = bot.get_channel(986654062760058920)
     role = discord.utils.get(member.guild.roles, id=986708938307276870)
     await member.add_roles(role)
-    await channel.send(f'Member joined: [ID: {member.id}, Mention: {member.mention}, Name: {member.name}]')
+    embed = discord.Embed(title="Member joined!", colour=discord.Colour.from_rgb(0, 125, 0))
+    embed.add_field(name="Who joined", value=f'{member.mention}')
+    embed.add_field(name="Member ID", value=f'{member.id}')
+    embed.add_field(name="Member Name", value=f'{member.name}')
+    await channel.send(embed=embed)
 
 
 @bot.event
 async def on_member_leave(member):
     channel = bot.get_channel(986654062760058920)
-    await channel.send(f'Member leave: [ID: {member.id}, Mention: {member.mention}, Name: {member.name}]')
+    embed = discord.Embed(title="Member leaved!", colour=discord.Colour.from_rgb(125, 0, 0))
+    embed.add_field(name="Who leaved", value=f'{member.mention}')
+    embed.add_field(name="Member ID", value=f'{member.id}')
+    embed.add_field(name="Member Name", value=f'{member.name}')
+    await channel.send(embed=embed)
 
 
 @bot.command()
@@ -40,9 +72,12 @@ async def verify(ctx):
     guild = bot.get_guild(986650706347950153)
     notverifyrole = guild.get_role(986708938307276870)
     verifyrole = guild.get_role(986710307525259264)
-    await author.remove_roles(notverifyrole)
-    await author.add_roles(verifyrole)
-    await ctx.channel.purge(limit=1)
+    if verifyrole in author.roles:
+        await ctx.send("U already verified")
+    else:
+        await author.remove_roles(notverifyrole)
+        await author.add_roles(verifyrole)
+        await ctx.channel.purge(limit=1)
 
 
 @bot.command()
@@ -75,5 +110,6 @@ async def help(ctx):
     embed.add_field(name='tempban', value='Temp ban / Temporary ban (can only members who have permission: ban_members)', inline=False)
 
     await ctx.send(embed=embed)
+
 
 bot.run(CFG['Bottoken'])
