@@ -29,7 +29,7 @@ async def on_message_delete(message):
 @bot.event
 async def on_message(message):
     channel = bot.get_channel(986654062760058920)
-    if 'https:' in message.content and message.author.id != 985846247485214730:
+    if 'https:' in message.content and message.author.id != 985846247485214730 and message.author.id != 451296162146811905:
         await message.delete()
         await channel.send(f"Member: {message.author.mention}. Send link! [{message.content}]")
     else:
