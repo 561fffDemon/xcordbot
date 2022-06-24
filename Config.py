@@ -1,4 +1,4 @@
 CFG = {
-    'Bottoken': 'OTg1ODQ2MjQ3NDg1MjE0NzMw.G41-sT.D2LUXArPZy4fYxmaAJqMJjAdkC3O-_H2cj0zOQ',
+    'Bottoken': 'OTg1ODQ2MjQ3NDg1MjE0NzMw.G5XJpY.0plGc7XD7gSiY_Fu4jHW_3bMDIq5in4Qsuq0rY',
     'Prefix': '`'
 }
